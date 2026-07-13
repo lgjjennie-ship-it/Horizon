@@ -19,14 +19,13 @@ def print_banner():
     """Print the application banner."""
     banner = r"""
 [bold blue]
-  _    _            _
- | |  | |          (_)
- | |__| | ___  _ __ _ ___  ___  _ __
- |  __  |/ _ \| '__| |_  / / _ \| '_ \
- | |  | | (_) | |  | |/ / | (_) | | | |
- |_|  |_|\___/|_|  |_/___| \___/|_| |_|
+   _  ___  _ __  _   _ _ __
+  | |/ _ \| '_ \| | | | '_ \
+  | | (_) | | | | |_| | | | |
+  |_|\___/|_| |_|\__, |_| |_|
+                 |___/
 [/bold blue]
-[cyan]  AI-Driven Information Aggregation System[/cyan]
+[cyan]  AI 驱动的财经信息聚合系统[/cyan]
     """
     console.print(banner)
 
@@ -35,8 +34,15 @@ def main():
     """Main CLI entry point."""
     print_banner()
 
-    parser = argparse.ArgumentParser(description="Horizon - AI-Driven Information Aggregation System")
+    parser = argparse.ArgumentParser(description="金览 JinLan - AI 驱动的财经信息聚合系统")
     parser.add_argument("--hours", type=int, help="Force fetch from last N hours")
+    parser.add_argument(
+        "--edition",
+        type=str,
+        choices=["morning", "evening"],
+        default=None,
+        help="日报刊次: morning=早报, evening=晚报. 不指定则用默认文件名",
+    )
     args = parser.parse_args()
 
     try:
@@ -74,7 +80,7 @@ def main():
 
         # Create and run orchestrator
         orchestrator = HorizonOrchestrator(config, storage)
-        asyncio.run(orchestrator.run(force_hours=args.hours))
+        asyncio.run(orchestrator.run(force_hours=args.hours, edition=args.edition))
 
     except KeyboardInterrupt:
         console.print("\n[yellow]⚠️  Interrupted by user[/yellow]")

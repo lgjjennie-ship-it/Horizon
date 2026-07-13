@@ -1,17 +1,25 @@
-name: Daily Horizon Summary
+name: Daily JinLan Summary
 
 on:
   schedule:
-    # GitHub scheduled workflows use UTC. 20:00 UTC is 04:00 Asia/Shanghai;
-    # this intentionally runs early to offset the observed schedule delay.
-    - cron: '0 22 * * *'
-  workflow_dispatch:      # Allow manual trigger
+    # 0:00 UTC = 8:00 Beijing (早报); 12:00 UTC = 20:00 Beijing (晚报)
+    - cron: '0 0,12 * * *'
+  workflow_dispatch:
+    inputs:
+      edition:
+        description: '日报刊次: morning=早报, evening=晚报'
+        required: false
+        type: choice
+        default: morning
+        options:
+          - morning
+          - evening
 
 jobs:
   daily-summary:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Needed to commit changes
+      contents: write
 
     steps:
       - name: Checkout code
@@ -31,18 +39,27 @@ jobs:
       - name: Prepare GitHub Actions config
         run: cp data/config.github.json data/config.json
 
-      - name: Run Horizon
+      - name: Determine edition
+        id: edition
+        run: |
+          if [ -n "${{ github.event.inputs.edition }}" ]; then
+            EDITION="${{ github.event.inputs.edition }}"
+          else
+            HOUR_UTC=$(date -u +'%H')
+            if [ "$HOUR_UTC" -lt 12 ]; then
+              EDITION="morning"
+            else
+              EDITION="evening"
+            fi
+          fi
+          echo "EDITION=$EDITION" >> $GITHUB_ENV
+          echo "edition=$EDITION" >> $GITHUB_OUTPUT
+
+      - name: Run JinLan
         env:
-          # Map secrets to environment variables expected by config.json
-          # Modify these based on your data/config.github.json provider settings
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          LWN_KEY: ${{ secrets.LWN_KEY }}
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
           HORIZON_WEBHOOK_URL: ${{ secrets.HORIZON_WEBHOOK_URL }}
-        run: uv run horizon --hours 24
+        run: uv run horizon --hours 12 --edition "$EDITION"
 
       - name: Set current date as environment variable
         run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -52,7 +69,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
-          keep_files: true  # Keep existing summaries on gh-pages branch
-          commit_message: "📝 Daily Summary: ${{ env.DATE }}"
+          keep_files: true
+          commit_message: "📝 JinLan ${{ env.EDITION }} Summary: ${{ env.DATE }}"
           publish_branch: gh-pages
           enable_jekyll: true

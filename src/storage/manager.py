@@ -5,7 +5,7 @@ import os
 import re
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import ValidationError
 
@@ -119,8 +119,15 @@ class StorageManager:
 
         return self.config_path
 
-    def save_daily_summary(self, date: str, markdown: str, language: str = "en") -> Path:
-        filename = f"horizon-{date}-{language}.md"
+    def save_daily_summary(
+        self,
+        date: str,
+        markdown: str,
+        language: str = "en",
+        edition: Optional[str] = None,
+    ) -> Path:
+        edition_part = f"-{edition}" if edition else ""
+        filename = f"jinlan-{date}{edition_part}-{language}.md"
         filepath = safe_output_path(self.summaries_dir, filename)
 
         _atomic_write_text(filepath, markdown)

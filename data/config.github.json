@@ -44,121 +44,37 @@
       },
       {
         "name": "36氪快讯",
-        "url": "https://rsshub.app/36kr/newsflashes",
+        "url": "https://rsshub.rssforever.com/36kr/newsflashes",
         "enabled": true,
         "category": "finance-flash"
       },
       {
         "name": "财新网",
-        "url": "https://rsshub.app/caixin/latest",
+        "url": "https://rsshub.rssforever.com/caixin/latest",
         "enabled": true,
         "category": "finance-deep"
       },
       {
         "name": "第一财经",
-        "url": "https://rsshub.app/yicai/news",
+        "url": "https://rsshub.rssforever.com/yicai/news",
         "enabled": true,
         "category": "finance-general"
       },
       {
         "name": "华尔街见闻",
-        "url": "https://rsshub.app/wallstreetcn/news/latest",
+        "url": "https://rsshub.rssforever.com/wallstreetcn/news/latest",
         "enabled": true,
         "category": "finance-global"
       },
       {
-        "name": "21世纪经济报道",
-        "url": "https://rsshub.app/21caijing",
-        "enabled": true,
-        "category": "finance-deep"
-      },
-      {
-        "name": "证券时报",
-        "url": "https://rsshub.app/stcn/news",
-        "enabled": true,
-        "category": "finance-equities"
-      },
-      {
-        "name": "财联社电报",
-        "url": "https://rsshub.app/cls/telegraph",
-        "enabled": true,
-        "category": "finance-flash"
-      },
-      {
-        "name": "雪球热门",
-        "url": "https://rsshub.app/xueqiu/trending",
-        "enabled": true,
-        "category": "community"
-      },
-      {
         "name": "虎嗅",
-        "url": "https://rsshub.app/huxiu/article",
+        "url": "https://rsshub.rssforever.com/huxiu/article",
         "enabled": true,
         "category": "finance-general"
       },
       {
-        "name": "量子位",
-        "url": "https://www.qbitai.com/feed",
-        "enabled": true,
-        "category": "finance-ai"
-      },
-      {
-        "name": "机器之心",
-        "url": "https://www.jiqizhixin.com/rss",
-        "enabled": true,
-        "category": "finance-ai"
-      },
-      {
-        "name": "InfoQ中文站",
-        "url": "https://www.infoq.cn/feed",
-        "enabled": true,
-        "category": "finance-tech"
-      },
-      {
-        "name": "爱范儿",
-        "url": "https://www.ifanr.com/feed",
-        "enabled": true,
-        "category": "finance-tech"
-      },
-      {
-        "name": "少数派",
-        "url": "https://sspai.com/feed",
-        "enabled": true,
-        "category": "finance-tech"
-      },
-      {
-        "name": "IT之家早报",
-        "url": "https://rsshub.app/ithome/ranking/morning",
-        "enabled": true,
-        "category": "finance-tech"
-      },
-      {
-        "name": "百度热搜",
-        "url": "https://rsshub.app/baidu/topwords",
-        "enabled": true,
-        "category": "community"
-      },
-      {
-        "name": "微博热搜",
-        "url": "https://rsshub.app/weibo/search/hot",
-        "enabled": true,
-        "category": "community"
-      },
-      {
-        "name": "知乎热榜",
-        "url": "https://rsshub.app/zhihu/hotlist",
-        "enabled": true,
-        "category": "community"
-      },
-      {
         "name": "V2EX热门",
-        "url": "https://rsshub.app/v2ex/topics/hot",
-        "enabled": true,
-        "category": "community"
-      },
-      {
-        "name": "掘金热门",
-        "url": "https://rsshub.app/juejin/trending/0",
+        "url": "https://rsshub.rssforever.com/v2ex/topics/hot",
         "enabled": true,
         "category": "community"
       }
@@ -188,7 +104,7 @@
     },
     "google_news": {
       "enabled": true,
-      "query": "财经 OR 股市 OR A股 OR 美股 OR 港股 OR 宏观经济",
+      "query": "财经 OR 股市 OR A股 OR 美股 OR 港股 OR 宏观经济 OR 利率 OR 央行",
       "language": "zh",
       "country": "CN",
       "ceid": null,
@@ -219,7 +135,7 @@
       },
       "deep": {
         "name": "深度分析",
-        "limit": 4,
+        "limit": 5,
         "categories": ["finance-deep", "finance-general"]
       },
       "flash": {
@@ -227,10 +143,10 @@
         "limit": 3,
         "categories": ["finance-flash"]
       },
-      "tech": {
-        "name": "科技与AI",
-        "limit": 2,
-        "categories": ["finance-tech", "finance-ai"]
+      "search": {
+        "name": "财经搜索",
+        "limit": 3,
+        "categories": ["finance-search"]
       },
       "community": {
         "name": "社区热点",
@@ -239,7 +155,7 @@
       }
     },
     "default_group": "other",
-    "default_group_limit": 3
+    "default_group_limit": 2
   },
   "webhook": {
     "enabled": false,

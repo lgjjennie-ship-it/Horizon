@@ -182,13 +182,23 @@ class HorizonOrchestrator:
         )
         self.last_fetch_report: Optional[FetchReport] = None
 
-    async def run(self, force_hours: int = None) -> None:
+    async def run(self, force_hours: int = None, edition: str = None) -> None:
         """Execute the complete workflow.
 
         Args:
             force_hours: Optional override for time window in hours
+            edition: Optional edition label ("morning" or "evening").
+                When set, summary filenames and titles are tagged accordingly
+                so the early/evening digests do not overwrite each other.
         """
-        self.console.print("[bold cyan]🌅 Horizon - Starting aggregation...[/bold cyan]\n")
+        edition_label_zh = {"morning": "早报", "evening": "晚报"}.get(edition, "")
+        edition_suffix = f"-{edition}" if edition else ""
+        title_edition = f" {edition_label_zh}" if edition_label_zh else ""
+        title_brand = f"金览 JinLan{title_edition}"
+        self.console.print(
+            f"[bold cyan]🌅 金览 JinLan - 启动信息聚合..."
+            f"{'(' + edition_label_zh + ')' if edition_label_zh else ''}[/bold cyan]\n"
+        )
 
         # Check email subscriptions if configured
         if (
@@ -260,27 +270,29 @@ class HorizonOrchestrator:
                 summary = await summarizer.generate_summary(important_items, today, len(all_items), language=lang)
 
                 # Save to data/summaries/
-                summary_path = self.storage.save_daily_summary(today, summary, language=lang)
+                summary_path = self.storage.save_daily_summary(
+                    today, summary, language=lang, edition=edition
+                )
                 self.console.print(f"💾 Saved {lang.upper()} summary to: {summary_path}\n")
 
                 # Copy to docs/ for GitHub Pages
                 try:
                     from pathlib import Path
 
-                    post_filename = f"{today}-summary-{lang}.md"
+                    post_filename = f"{today}{edition_suffix}-summary-{lang}.md"
                     posts_dir = Path("docs/_posts")
                     posts_dir.mkdir(parents=True, exist_ok=True)
 
                     dest_path = safe_output_path(posts_dir, post_filename)
 
-                    # Add Jekyll front matter
                     front_matter = (
                         "---\n"
                         "layout: default\n"
-                        f"title: \"Horizon Summary: {today} ({lang.upper()})\"\n"
+                        f"title: \"{title_brand}: {today} ({lang.upper()})\"\n"
                         f"date: {today}\n"
                         f"lang: {lang}\n"
-                        "---\n\n"
+                        + (f"edition: {edition}\n" if edition else "")
+                        + "---\n\n"
                     )
 
                     # Strip leading H1 header to avoid duplication with Jekyll title
@@ -302,7 +314,7 @@ class HorizonOrchestrator:
                 if self.email_manager and self.config.email and self.config.email.enabled:
                     self.console.print(f"📧 Sending {lang.upper()} email summary...")
                     subscribers = self.storage.load_subscribers()
-                    subject = f"Horizon Summary ({lang.upper()}) - {today}"
+                    subject = f"金览 JinLan{title_edition} ({lang.upper()}) - {today}"
                     self.email_manager.send_daily_summary(summary, subject, subscribers)
 
                 # Send webhook notification if configured
@@ -316,7 +328,7 @@ class HorizonOrchestrator:
                         summarizer=summarizer,
                     )
 
-            self.console.print("[bold green]✅ Horizon completed successfully![/bold green]")
+            self.console.print("[bold green]✅ 金览 JinLan completed successfully![/bold green]")
             usage = get_usage_snapshot()
             if usage.total_tokens > 0:
                 self.console.print(
