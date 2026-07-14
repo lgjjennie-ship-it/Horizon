@@ -124,9 +124,81 @@
     }
   }
 
+  function buildSidebarToc() {
+    var anchors = document.querySelectorAll('.main-content a[id^="item-"]');
+    if (anchors.length < 3) return;
+
+    var items = [];
+    anchors.forEach(function (a) {
+      var h2 = null;
+      var node = a.parentElement.nextElementSibling;
+      while (node) {
+        if (node.tagName === 'H2') { h2 = node; break; }
+        node = node.nextElementSibling;
+      }
+      if (!h2) return;
+
+      var link = h2.querySelector('a');
+      var title = (link ? link.textContent : h2.textContent).trim();
+      title = title.replace(/⭐️\s*\d+(?:\.\d+)?\/10/, '').trim();
+      if (title.length > 28) title = title.slice(0, 27) + '…';
+
+      items.push({ id: a.id, title: title });
+    });
+    if (items.length < 3) return;
+
+    var nav = document.createElement('nav');
+    nav.className = 'toc-sidebar';
+    nav.innerHTML = '<div class="toc-title">目录</div>';
+
+    var list = document.createElement('ul');
+    items.forEach(function (item, idx) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = '#' + item.id;
+      a.textContent = (idx + 1) + '. ' + item.title;
+      a.dataset.target = item.id;
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    nav.appendChild(list);
+
+    var toggle = document.createElement('button');
+    toggle.className = 'toc-toggle';
+    toggle.type = 'button';
+    toggle.textContent = '目录';
+    toggle.setAttribute('aria-label', '切换目录');
+
+    document.body.appendChild(nav);
+    document.body.appendChild(toggle);
+
+    toggle.addEventListener('click', function () {
+      nav.classList.toggle('open');
+      toggle.classList.toggle('active');
+    });
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var id = entry.target.id;
+          if (!id) return;
+          var link = nav.querySelector('a[data-target="' + id + '"]');
+          if (!link) return;
+          if (entry.isIntersecting) {
+            list.querySelectorAll('li').forEach(function (li) { li.classList.remove('active'); });
+            link.parentElement.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px' });
+
+      anchors.forEach(function (a) { observer.observe(a); });
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     processScoreBadges();
     markSemanticElements();
     setupLanguageToggle();
+    buildSidebarToc();
   });
 })();
