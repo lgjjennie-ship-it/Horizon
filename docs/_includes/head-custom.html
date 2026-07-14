@@ -12,3 +12,11 @@
 @media(prefers-color-scheme:dark){body{background:#1a1726!important;color:#e8e4f0!important}}
 </style>
 <script src="{{ '/assets/js/horizon.js' | relative_url }}" defer></script>
+<script type="application/json" id="jinlan-posts">
+[
+{% assign sorted_posts = site.posts | sort: "date" | reverse %}
+{% for post in sorted_posts %}
+  {"url":"{{ post.url | relative_url }}","title":{{ post.title | jsonify }},"date":"{{ post.date | date: '%Y-%m-%d' }}","lang":"{{ post.lang }}","edition":"{{ post.edition }}"}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]
+</script>

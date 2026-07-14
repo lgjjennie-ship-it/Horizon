@@ -221,10 +221,14 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid var(--hz-border);
 }
 
+.toc-sidebar .toc-title + .toc-title {
+  margin-top: 20px;
+}
+
 .toc-sidebar ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 4px 0;
 }
 
 .toc-sidebar li {
@@ -253,6 +257,10 @@ h1, h2, h3, h4, h5, h6 {
   border-left-color: var(--hz-accent);
   font-weight: 700;
   background: var(--hz-bg);
+}
+
+.toc-date-list li a {
+  font-weight: 500;
 }
 
 .toc-toggle {
