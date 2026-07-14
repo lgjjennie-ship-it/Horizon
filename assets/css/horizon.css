@@ -189,3 +189,108 @@ h1, h2, h3, h4, h5, h6 {
 .lang-section.hidden {
   display: none;
 }
+
+/* --- Sidebar TOC (detail pages) --- */
+.toc-sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 270px;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--hz-surface);
+  border-right: 1px solid var(--hz-border);
+  padding: 60px 20px 20px;
+  z-index: 999;
+  transition: left 0.25s ease;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.08);
+}
+
+.toc-sidebar.open {
+  left: 0;
+}
+
+.toc-title {
+  font-size: 0.9em;
+  font-weight: 800;
+  color: var(--hz-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hz-border);
+}
+
+.toc-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-sidebar li {
+  margin: 0;
+}
+
+.toc-sidebar li a {
+  display: block;
+  padding: 7px 10px;
+  font-size: 0.82em;
+  line-height: 1.4;
+  color: var(--hz-text-muted) !important;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  border-radius: 0 3px 3px 0;
+  transition: all 0.15s;
+}
+
+.toc-sidebar li a:hover {
+  color: var(--hz-text) !important;
+  background: var(--hz-bg);
+}
+
+.toc-sidebar li.active a {
+  color: var(--hz-accent) !important;
+  border-left-color: var(--hz-accent);
+  font-weight: 700;
+  background: var(--hz-bg);
+}
+
+.toc-toggle {
+  position: fixed;
+  top: 14px;
+  left: 16px;
+  z-index: 1001;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--hz-border);
+  background: var(--hz-surface);
+  color: var(--hz-text);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.78em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+}
+
+.toc-toggle:hover {
+  background: var(--hz-accent);
+  color: #fff;
+  border-color: var(--hz-accent);
+}
+
+.toc-toggle.active {
+  background: var(--hz-accent);
+  color: #fff;
+  border-color: var(--hz-accent);
+}
+
+@media (max-width: 768px) {
+  .toc-sidebar {
+    width: 240px;
+    left: -260px;
+  }
+}
